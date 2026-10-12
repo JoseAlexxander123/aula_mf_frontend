@@ -1,0 +1,15 @@
+.brand { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; flex: none; }
+.brand picture { display: block; line-height: 0; }
+.brand img { width: auto; }
+.header img { height: 3.1rem; }
+.hero img { height: 6.5rem; }
+/* En oscuro el logo va sobre una «pegatina» blanca para conservar sus colores (igual que la web). */
+:global(:root[data-theme='dark']) .brand picture { background: #fff; border-radius: .6rem; padding: .15rem .35rem; border: var(--borde-fino); }
+.label {
+  font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 800; color: var(--tx2);
+  border-left: 2px solid var(--sup2); padding-left: .6rem; line-height: 1.2; max-width: 5rem;
+}
+@media (max-width: 560px) {
+  .header img { height: 2.6rem; }
+  .label { display: none; }
+}

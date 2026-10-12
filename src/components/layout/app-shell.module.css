@@ -1,0 +1,48 @@
+/* PROTOTIPO B · Panel de estudio — barra lateral fija, panel ordenado tipo plataforma, todo a un clic. */
+
+.shell { min-height: 100vh; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 40; height: var(--topbar-h);
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0 var(--gutter); background: var(--sup); border-bottom: var(--borde);
+}
+.area { border: var(--borde-fino); border-radius: 99px; padding: .2rem .8rem; font-weight: 800; font-size: .8rem; background: var(--contraste); color: var(--contraste-tx); }
+.topbar > :first-child { flex: none; }
+.status { margin-left: auto; display: flex; align-items: center; justify-content: flex-end; gap: .5rem; min-width: 0; }
+
+.frame { display: grid; grid-template-columns: 15rem minmax(0, 1fr); min-height: calc(100vh - var(--topbar-h)); }
+.family .frame { grid-template-columns: minmax(0, 1fr); max-width: 1180px; margin: 0 auto; }
+
+.content { min-width: 0; padding: var(--gutter); }
+
+.nav {
+  overflow-y: auto;
+  background: var(--sup); border-right: var(--borde); padding: 1.2rem .8rem;
+  display: flex; flex-direction: column; gap: .3rem;
+  position: sticky; top: var(--topbar-h); height: calc(100vh - var(--topbar-h));
+}
+.navLink { text-decoration: none; display: flex; align-items: center; gap: .6rem; font-weight: 800; padding: .55rem .7rem; border-radius: .8rem; font-size: .95rem; border: 2px solid transparent; }
+.navLink:hover { background: var(--sup2); }
+.navLink[aria-current='page'] { background: var(--amarillo); color: var(--navy); border-color: var(--linea); box-shadow: var(--sombra-sm); }
+.navIcon { width: 2rem; height: 2rem; border-radius: .6rem; display: grid; place-items: center; font-size: 1rem; background: var(--sup2); flex: none; }
+.navLink[aria-current='page'] .navIcon { background: var(--sup); color: var(--navy); }
+.navLabel { white-space: nowrap; }
+.navShort { display: none; }
+
+@media (max-width: 860px) {
+  .frame { grid-template-columns: 1fr; }
+  .nav {
+    position: fixed; z-index: 45; inset: auto 0 0 0; height: auto;
+    flex-direction: row; justify-content: space-around;
+    border-right: 0; border-top: var(--borde); padding: .35rem;
+  }
+  .nav { gap: .15rem; }
+  .navLink { flex: 1 1 0; min-width: 0; justify-content: center; flex-direction: column; gap: 0; font-size: .66rem; padding: .3rem .35rem; text-align: center; }
+  .navLink[aria-current='page'] { box-shadow: none; }
+  .navIcon { width: 1.8rem; height: 1.8rem; background: transparent; }
+  .navLabel { display: none; }
+  .navShort { display: inline; white-space: nowrap; }
+  .content { padding-bottom: 6rem; }
+  .area { display: none; }
+}

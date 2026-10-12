@@ -1,0 +1,4 @@
+.box { max-width: 32rem; margin: 2rem auto; background: var(--sup); border: var(--borde); box-shadow: var(--sombra); border-radius: 1.3rem; padding: 1.6rem; display: grid; gap: .8rem; justify-items: center; text-align: center; }
+.icon { font-size: 2.4rem; }
+.box p { color: var(--tx2); }
+.box small { color: var(--tx2); font-size: .75rem; }

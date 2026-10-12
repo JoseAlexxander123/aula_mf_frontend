@@ -1,0 +1,199 @@
+/* Tema del aula = lenguaje visual del prototipo B (elegido por el dueño):
+   Bricolage Grotesque + Nunito, bordes gruesos azul marino, sombras sólidas, rosa principal, pastillas amarillas.
+   Aquí solo van tokens, reset y primitivas reutilizables; cada componente tiene su CSS Module.
+
+   Rendimiento (VPS / equipos modestos): sin blur, backdrop-filter ni animaciones infinitas.
+   Solo se animan transform/opacity (compuestas por la GPU sin repintar). */
+
+:root {
+  /* Marca Mate Fácil */
+  --ruta-explorer: #2bb673;
+  --ruta-creator: #f7941d;
+  --ruta-innovator: #2f80ed;
+  --ruta-future: #8e44ad;
+  --mate: #0e9e9a;
+  --mate-oscuro: #0b6b68;
+  --navy: #16213a;
+  --rosa: #ff5c8a;
+  --amarillo: #ffd23f;
+  --ok: #1f9d55;
+  --error: #d64545;
+  --aviso: #7a5600;
+  --aviso-fondo: #fff3c4;
+
+  /* Tema claro (por defecto). El oscuro redefine solo estos tokens: los componentes no cambian. */
+  color-scheme: light;
+  --tx: #16213a;
+  --tx2: #4b5675;
+  --sup: #ffffff;
+  --sup2: #eef2fb;
+  --fondo: #f6f8ff;
+  --acento: #e5487a;
+  /* Línea de bordes y sombras sólidas (azul marino en claro, casi blanco en oscuro). */
+  --linea: var(--navy);
+  /* Fondo/tinta de los elementos «seleccionados» de alto contraste (pestañas, etiqueta de área). */
+  --contraste: var(--navy);
+  --contraste-tx: #ffffff;
+  --login-fondo: #fffbea;
+  --login-rosa: #ffe8f0;
+  --login-verde: #e3f7ef;
+  --borde: 2.5px solid var(--linea);
+  --borde-fino: 2px solid var(--linea);
+  --sombra: 4px 4px 0 var(--linea);
+  --sombra-sm: 3px 3px 0 var(--linea);
+  --radio: 1.1rem;
+  --display: var(--font-display), system-ui, sans-serif;
+  --sans: var(--font-sans), system-ui, sans-serif;
+
+  /* Colores por área de laboratorio */
+  --area-programacion: var(--ruta-innovator);
+  --area-ia: var(--ruta-future);
+  --area-digitales: var(--ruta-creator);
+
+  --topbar-h: 4.1rem;
+  --gutter: clamp(16px, 3vw, 32px);
+}
+
+/* Modo oscuro: se activa con data-theme="dark" en <html> (lo pone el script de tema antes del primer pintado). */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --tx: #eef2fb;
+  --tx2: #aab4cc;
+  --sup: #182238;
+  --sup2: #233050;
+  --fondo: #0e1527;
+  --linea: #dfe6f5;
+  --contraste: #eef2fb;
+  --contraste-tx: #16213a;
+  --ok: #3ccf82;
+  --error: #ff6b6b;
+  --aviso: #ffe08a;
+  --aviso-fondo: #4a3b0a;
+  --login-fondo: #0e1527;
+  --login-rosa: #3b1a33;
+  --login-verde: #10332a;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--tx);
+  background: var(--fondo);
+  -webkit-font-smoothing: antialiased;
+}
+img, svg, video { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
+h1, h2, h3, h4, p, ul, ol, figure, fieldset { margin: 0; }
+fieldset { padding: 0; border: 0; min-width: 0; }
+ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
+a { color: inherit; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 3px solid var(--ruta-innovator); outline-offset: 3px; border-radius: 6px; }
+
+h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+h1 { font-size: clamp(1.7rem, 3.6vw, 2.5rem); }
+h2 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); }
+h3 { font-size: 1.1rem; }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+.skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--amarillo); color: var(--navy); border: var(--borde-fino); border-radius: 99px; padding: .4rem .9rem; font-weight: 800; }
+.skip-link:focus { top: 1rem; }
+
+/* ─── Primitivas ─────────────────────────────────────────────────────── */
+
+.card { background: var(--sup); border: var(--borde); border-radius: var(--radio); padding: 1.2rem; min-width: 0; }
+.card--shadow { box-shadow: var(--sombra); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+  padding: .7rem 1.15rem; border-radius: .85rem; border: var(--borde); box-shadow: var(--sombra-sm);
+  font-weight: 800; text-decoration: none; background: var(--sup); color: var(--tx);
+  transition: transform .15s ease, box-shadow .15s ease; white-space: nowrap;
+}
+.btn:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--linea); }
+.btn:active:not(:disabled) { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--linea); }
+.btn:disabled { opacity: .55; }
+.btn--primary { background: var(--acento); color: #fff; }
+.btn--dark { background: var(--contraste); color: var(--contraste-tx); }
+.btn--lg { padding: .95rem 1.4rem; font-size: 1.05rem; }
+.btn--sm { padding: .4rem .8rem; font-size: .85rem; border-width: 2px; box-shadow: 2px 2px 0 var(--linea); }
+
+.link { font-weight: 800; font-size: .88rem; color: var(--acento); text-decoration: none; background: none; border: 0; padding: 0; }
+.link:hover { text-decoration: underline; }
+
+.chip { border: var(--borde-fino); border-radius: 99px; padding: .2rem .65rem; font-weight: 800; font-size: .88rem; background: var(--sup); white-space: nowrap; }
+.pill { display: inline-flex; align-items: center; gap: .35rem; background: var(--amarillo); color: var(--navy); border: var(--borde-fino); border-radius: 99px; padding: .2rem .7rem; font-weight: 800; font-size: .78rem; }
+.tag-demo { font-size: .68rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; background: var(--aviso-fondo); color: var(--aviso); padding: .15em .5em; border-radius: .4em; white-space: nowrap; }
+
+.input {
+  width: 100%; min-width: 0; border: var(--borde-fino); border-radius: .8rem; padding: .7rem .9rem;
+  font-size: 1rem; background: var(--sup);
+}
+.input:focus { outline: none; border-color: var(--acento); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 25%, transparent); }
+.label { display: grid; gap: .35rem; font-weight: 800; font-size: .9rem; }
+
+.muted { color: var(--tx2); }
+.small { font-size: .85rem; }
+
+/* ─── Layout de página ───────────────────────────────────────────────── */
+
+.page { display: grid; gap: 1.6rem; align-content: start; min-width: 0; width: 100%; max-width: 78rem; margin-inline: auto; }
+.page-header { display: flex; justify-content: space-between; align-items: flex-end; gap: .8rem 1rem; flex-wrap: wrap; }
+.page-header > div { min-width: 0; flex: 1 1 20rem; }
+.page-header p { color: var(--tx2); margin-top: .3rem; max-width: 46rem; }
+.section { display: grid; gap: .8rem; min-width: 0; align-content: start; }
+.section-title { display: flex; justify-content: space-between; align-items: center; gap: .3rem 1rem; flex-wrap: wrap; min-width: 0; }
+.split { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 1.4rem; align-items: start; }
+.split-aside { display: grid; grid-template-columns: minmax(0, 1fr) 21rem; gap: 1.2rem; align-items: start; }
+.split-aside > aside { position: sticky; top: calc(var(--topbar-h) + 1.4rem); }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
+
+@media (max-width: 1100px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .split-aside { grid-template-columns: minmax(0, 1fr); }
+  .split-aside > aside { position: static; }
+}
+@media (max-width: 760px) {
+  .grid-2 { grid-template-columns: minmax(0, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .btn { white-space: normal; text-align: center; }
+}
+
+/* ─── Esqueletos de carga (sin animación infinita: solo un tono estático) ─ */
+.skeleton { background: var(--sup2); border-radius: var(--radio); min-height: 1rem; }
+
+/* ─── Impresión del informe de la familia ─────────────────────────────── */
+@media print {
+  /* El informe impreso / PDF siempre sale en claro, aunque la pantalla esté en oscuro. */
+  :root[data-theme] {
+    color-scheme: light;
+    --tx: #16213a; --tx2: #4b5675; --sup: #ffffff; --sup2: #eef2fb; --fondo: #ffffff;
+    --linea: var(--navy); --contraste: var(--navy); --contraste-tx: #ffffff;
+    --ok: #1f9d55; --error: #d64545; --aviso: #7a5600; --aviso-fondo: #fff3c4;
+  }
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  .card, .btn { box-shadow: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

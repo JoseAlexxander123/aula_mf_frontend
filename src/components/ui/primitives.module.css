@@ -1,0 +1,10 @@
+.bar { height: .6rem; border-radius: 99px; background: var(--sup2); overflow: hidden; }
+.bar > i { display: block; height: 100%; width: var(--v, 50%); background: var(--c, var(--mate)); border-radius: inherit; transition: width .4s ease; }
+
+.kpi { background: var(--sup); border: var(--borde); border-radius: var(--radio); padding: 1rem; display: flex; flex-direction: column; gap: .2rem; min-width: 0; }
+.kpi span { font-size: .78rem; color: var(--tx2); font-weight: 700; }
+.kpi b { font-family: var(--display); font-size: 1.7rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi small { color: var(--tx2); font-size: .8rem; margin-bottom: .3rem; }
+
+.skTitle { max-width: 28rem; }
+.empty { color: var(--tx2); font-size: .92rem; background: var(--sup2); border-radius: var(--radio); padding: 1rem; text-align: center; }

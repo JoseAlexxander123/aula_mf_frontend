@@ -1,0 +1,29 @@
+.stars { background: var(--amarillo); color: var(--navy); display: inline-block; }
+.bump { animation: bump .35s ease-out; }
+@keyframes bump { 40% { transform: scale(1.18); } }
+
+.menuRoot { position: relative; }
+.iconBtn { position: relative; font-size: 1.15rem; padding: .25rem .35rem; border: 0; background: none; }
+.badge { position: absolute; top: -4px; right: -6px; font-style: normal; background: var(--acento); color: #fff; font-size: .65rem; font-weight: 800; border-radius: 99px; padding: 0 .35rem; border: 2px solid var(--sup); }
+.avatar {
+  width: 2.4rem; height: 2.4rem; border-radius: 50%; display: grid; place-items: center; font-size: 1.3rem; padding: 0;
+  background: color-mix(in srgb, var(--ruta-creator) 25%, var(--sup)); border: var(--borde-fino); font-weight: 800;
+}
+.avatarText { font-size: .85rem; background: color-mix(in srgb, var(--mate) 20%, var(--sup)); }
+
+.panel {
+  position: absolute; right: 0; top: calc(100% + .6rem); z-index: 50; width: min(20rem, calc(100vw - 32px));
+  background: var(--sup); border: var(--borde); border-radius: 1rem; box-shadow: var(--sombra); padding: .9rem; display: grid; gap: .6rem;
+}
+.panelTitle { font-family: var(--display); font-weight: 800; }
+.empty { font-size: .85rem; color: var(--tx2); }
+.list { display: grid; gap: .5rem; }
+.list li { display: flex; flex-direction: column; border-bottom: 1px solid var(--sup2); padding-bottom: .45rem; }
+.list li:last-child { border-bottom: 0; padding-bottom: 0; }
+.list a { text-decoration: none; }
+.list a:hover { color: var(--acento); }
+.list small { color: var(--tx2); font-size: .78rem; }
+
+@media (max-width: 560px) {
+  .hideMobile { display: none; }
+}

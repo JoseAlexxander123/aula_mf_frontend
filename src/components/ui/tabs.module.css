@@ -1,0 +1,41 @@
+.root { display: grid; min-width: 0; }
+.root_cards, .root_pills, .root_chips { gap: 1rem; }
+.panel { min-width: 0; }
+.panel:focus-visible { outline-offset: 4px; }
+
+.tab { border: var(--borde); background: var(--sup); color: var(--tx); font-weight: 800; }
+
+/* folder: pestañas tipo carpeta (lección).
+   La línea base la dibuja la lista; la pestaña activa la tapa con margin-bottom negativo.
+   Sin overflow en la lista: un overflow recortaría ese solape y dejaría una raya bajo la pestaña activa. */
+.list_folder { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .3rem; border-bottom: var(--borde); padding-inline: .6rem; }
+.tab_folder { position: relative; border-bottom: 0; border-radius: .8rem .8rem 0 0; background: var(--sup2); padding: .5rem 1rem; margin-bottom: 0; }
+.tab_folder[aria-selected='true'] { background: var(--sup); z-index: 1; margin-bottom: -2.5px; padding-bottom: calc(.5rem + 2.5px); }
+.panel_folder { background: var(--sup); border: var(--borde); border-top: 0; border-radius: 0 0 1.1rem 1.1rem; padding: 1.2rem; }
+
+/* segmented: control de dos opciones (ingreso) */
+.list_segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: var(--borde); border-radius: 99px; overflow: hidden; margin-bottom: 1.1rem; }
+.tab_segmented { border: 0; padding: .6rem; background: var(--sup); }
+.tab_segmented[aria-selected='true'] { background: var(--contraste); color: var(--contraste-tx); }
+
+/* cards: selector grande Matemáticas / Laboratorio */
+.list_cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+.tab_cards { min-width: 0; border-radius: var(--radio); padding: .75rem 1rem; text-align: left; display: flex; flex-direction: column; transition: transform .15s ease; }
+.tab_cards[aria-selected='true'] { color: #fff; box-shadow: var(--sombra); }
+.tab_cards:hover { transform: translateY(-1px); }
+
+/* pills: elegir hijo */
+.list_pills { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tab_pills { border-radius: 99px; padding: .5rem 1rem; }
+.tab_pills[aria-selected='true'] { background: var(--contraste); color: var(--contraste-tx); }
+
+/* chips: secciones del informe */
+.list_chips { display: flex; gap: .35rem; overflow-x: auto; padding-bottom: .3rem; }
+.tab_chips { border-width: 2px; border-radius: .7rem; padding: .4rem .8rem; font-size: .85rem; white-space: nowrap; }
+.tab_chips[aria-selected='true'] { background: var(--amarillo); color: var(--navy); box-shadow: 2px 2px 0 var(--linea); }
+.panel_chips, .panel_cards, .panel_pills { display: grid; gap: 1rem; }
+
+@media (max-width: 560px) {
+  .tab_folder { padding-inline: .7rem; font-size: .9rem; }
+  .list_cards { grid-template-columns: 1fr; }
+}

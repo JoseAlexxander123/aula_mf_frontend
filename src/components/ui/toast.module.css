@@ -1,0 +1,14 @@
+.region { position: fixed; z-index: 90; right: 16px; bottom: 16px; display: grid; gap: .5rem; width: min(22rem, calc(100vw - 32px)); pointer-events: none; }
+.toast {
+  pointer-events: auto; display: flex; align-items: center; justify-content: space-between; gap: .8rem;
+  background: var(--sup); border: var(--borde); border-radius: .9rem; box-shadow: var(--sombra); padding: .7rem .9rem;
+  font-weight: 700; font-size: .92rem; animation: enter .2s ease-out;
+}
+.toast button { border: 0; background: none; font-size: 1.2rem; line-height: 1; padding: 0 .2rem; font-weight: 800; }
+.info { border-left: 8px solid var(--ruta-innovator); }
+.success { border-left: 8px solid var(--ok); }
+.error { border-left: 8px solid var(--error); }
+
+@keyframes enter { from { opacity: 0; transform: translateY(8px); } }
+
+@media (max-width: 860px) { .region { bottom: 5.5rem; } }

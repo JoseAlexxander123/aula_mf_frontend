@@ -1,0 +1,74 @@
+import 'server-only';
+import { apiRequest } from '@/lib/http/api-client';
+import { ApiError } from '@/lib/http/errors';
+import type { Services } from '../contracts';
+
+// Implementación contra la API .NET. Cada método es una llamada fina: la lógica de negocio
+// (corrección, límites de tiempo, reglas del tutor) vive en el backend.
+// Las rutas son la PROPUESTA de contrato para el equipo .NET (ver README › «Contrato de la API»).
+
+const enc = encodeURIComponent;
+
+/** 401 al iniciar sesión = credenciales incorrectas, no un error del sistema. */
+async function nullOn401<T>(promise: Promise<T>): Promise<T | null> {
+  try {
+    return await promise;
+  } catch (error) {
+    if (error instanceof ApiError && error.code === 'unauthorized') return null;
+    throw error;
+  }
+}
+
+export const httpServices: Services = {
+  auth: {
+    loginStudent: (input) => nullOn401(apiRequest('/auth/student/login', { method: 'POST', body: input })),
+    loginFamily: (input) => nullOn401(apiRequest('/auth/family/login', { method: 'POST', body: input })),
+    me: (token) => nullOn401(apiRequest('/auth/me', { token })),
+    logout: (token) => apiRequest('/auth/logout', { method: 'POST', token }),
+  },
+
+  students: {
+    getProfile: ({ token }) => apiRequest('/students/me', { token }),
+    getDashboard: ({ token }) => apiRequest('/students/me/dashboard', { token }),
+    getLearningPath: ({ token }) => apiRequest('/students/me/learning-path', { token }),
+    getAchievements: ({ token }) => apiRequest('/students/me/achievements', { token }),
+  },
+
+  notifications: {
+    list: ({ token }) => apiRequest('/notifications', { token }),
+    markAllRead: ({ token }) => apiRequest('/notifications/read-all', { method: 'POST', token }),
+  },
+
+  lessons: {
+    getCurrentMathLesson: ({ token }) => apiRequest('/students/me/lessons/current?track=math', { token }),
+    getCurrentLabLesson: ({ token }) => apiRequest('/students/me/lessons/current?track=lab', { token }),
+    checkAnswer: ({ token }, exerciseId, answer, practice) =>
+      apiRequest(`/practice/exercises/${enc(exerciseId)}/check`, { method: 'POST', token, body: { answer, ...practice } }),
+  },
+
+  tutor: {
+    // El tutor real (LLM) puede tardar más: límite de tiempo propio.
+    ask: ({ token }, request) => apiRequest('/tutor/ask', { method: 'POST', token, body: request, timeoutMs: 20_000 }),
+  },
+
+  assessments: {
+    list: ({ token }) => apiRequest('/students/me/evaluations', { token }),
+    start: ({ token }, evaluationId) => apiRequest(`/evaluations/${enc(evaluationId)}/attempts`, { method: 'POST', token }),
+    submit: ({ token }, attemptId, answers) =>
+      apiRequest(`/evaluations/attempts/${enc(attemptId)}/submit`, { method: 'POST', token, body: { answers } }),
+  },
+
+  schedule: {
+    getSchedule: ({ token }) => apiRequest('/students/me/schedule', { token }),
+    // Los archivos deben subirse directo al almacenamiento con una URL firmada; aquí solo van sus nombres.
+    submitTask: ({ token }, taskId, submission) =>
+      apiRequest(`/tasks/${enc(taskId)}/submissions`, { method: 'POST', token, body: submission }),
+  },
+
+  family: {
+    getChildren: ({ token }) => apiRequest('/families/me/children', { token }),
+    getMessages: ({ token }) => apiRequest('/families/me/messages', { token }),
+    sendMessage: ({ token }, text) => apiRequest('/families/me/messages', { method: 'POST', token, body: { text } }),
+    getMembership: ({ token }) => apiRequest('/families/me/membership', { token }),
+  },
+};

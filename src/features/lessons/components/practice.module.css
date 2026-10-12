@@ -1,0 +1,30 @@
+.practice { background: var(--sup); border: var(--borde); border-radius: var(--radio); padding: 1.3rem; display: grid; gap: 1rem; }
+.head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.stars { font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.steps { display: flex; gap: .4rem; }
+.steps li { flex: 1; height: .45rem; border-radius: 99px; background: var(--sup2); transition: background-color .2s; }
+.stepCurrent { background: color-mix(in srgb, var(--acento) 45%, var(--sup2)) !important; }
+.stepDone { background: var(--ok) !important; }
+
+.exercise { display: grid; gap: .8rem; }
+.num { font-size: .78rem; font-weight: 800; color: var(--tx2); text-transform: uppercase; letter-spacing: .08em; }
+.prompt { font-size: 1.35rem; font-weight: 800; line-height: 1.3; }
+.row { display: flex; flex-wrap: wrap; gap: .5rem; }
+.input { flex: 1 1 8rem; min-width: 0; font-size: 1.2rem; font-weight: 700; padding: .7rem .9rem; border-radius: .7rem; border: 2px solid color-mix(in srgb, var(--tx) 25%, transparent); background: var(--sup); }
+.input:focus { border-color: var(--acento); outline: none; }
+.row button, .next { border: 0; border-radius: .7rem; padding: .7rem 1rem; font-weight: 800; }
+.check { background: var(--acento); color: #fff; }
+.hint { background: var(--sup2); }
+.next { justify-self: start; background: var(--tx); color: var(--sup); }
+.row button:disabled { opacity: .6; }
+.feedback { min-height: 1.5em; font-weight: 700; }
+
+.right .input { border-color: var(--ok); }
+.right .feedback { color: var(--ok); }
+.wrong .input { border-color: var(--error); animation: shake .3s; }
+.wrong .feedback { color: var(--error); }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+.done { text-align: center; padding: 1rem; border-radius: .8rem; background: color-mix(in srgb, var(--ok) 12%, var(--sup)); display: grid; gap: .3rem; }
+.doneTitle { font-size: 1.3rem; font-weight: 800; }

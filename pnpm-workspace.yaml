@@ -1,0 +1,8 @@
+# pnpm solo ejecuta scripts de instalación de los paquetes listados (seguridad por defecto).
+allowBuilds:
+  sharp: false
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@vitest/mocker@5.0.4'
+  - '@vitest/spy@5.0.4'
+  - vitest@5.0.4

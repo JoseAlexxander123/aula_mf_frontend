@@ -1,0 +1,19 @@
+.continue { display: flex; flex-direction: column; justify-content: space-between; gap: 1rem; height: 100%; min-width: 0; background: var(--sup); border: var(--borde); box-shadow: 6px 6px 0 var(--shadow); border-radius: 1.3rem; padding: 1.3rem; }
+.continueBody { display: grid; gap: .5rem; min-width: 0; align-content: start; }
+.continue > :global(.btn) { align-self: flex-start; }
+.continueBody small { color: var(--tx2); font-weight: 700; }
+
+.side { display: grid; gap: .8rem; min-width: 0; }
+.progressCard { display: grid; gap: .5rem; }
+.progressHead { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
+.progressHead span { font-size: .8rem; color: var(--tx2); }
+.pendingCard { box-shadow: 4px 4px 0 var(--acento); }
+.pendingCard p { font-size: .92rem; }
+
+.notices { display: grid; gap: .5rem; }
+.notices li { background: var(--sup); border: var(--borde); border-radius: var(--radio); padding: .7rem .9rem; display: flex; gap: .7rem; align-items: center; min-width: 0; }
+.notices li > div { min-width: 0; overflow-wrap: anywhere; }
+.notices a { text-decoration: none; }
+.notices small { display: block; color: var(--tx2); font-size: .8rem; }
+.noticeKind { font-size: .68rem; font-weight: 800; text-transform: uppercase; padding: .2rem .5rem; border-radius: 99px; background: var(--sup2); white-space: nowrap; }
+
