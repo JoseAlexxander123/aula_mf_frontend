@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#ffffff">
+  <title>Sin conexión · Aula Mate Fácil</title>
+  <!-- Página autosuficiente: la sirve el service worker cuando una navegación falla por falta de red.
+       No depende de CSS/JS de Next (sus archivos llevan hash y pueden no estar guardados), por eso los estilos van en línea.
+       Los tokens replican los de src/app/globals.css (tema claro/oscuro con la misma clave «mf-tema»). -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('mf-tema');
+        var dark = saved ? saved === 'oscuro' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', dark ? '#182238' : '#ffffff');
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --tx: #16213a; --tx2: #4b5675; --sup: #ffffff; --sup2: #eef2fb; --fondo: #f6f8ff;
+      --linea: #16213a; --acento: #e5487a; --amarillo: #ffd23f; --navy: #16213a;
+    }
+    :root[data-theme='dark'] {
+      color-scheme: dark;
+      --tx: #eef2fb; --tx2: #aab4cc; --sup: #182238; --sup2: #233050; --fondo: #0e1527; --linea: #dfe6f5;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { background: var(--fondo); -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0; min-height: 100vh; min-height: 100dvh; display: grid; place-items: center;
+      padding: max(1.5rem, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-weight: 600; line-height: 1.55;
+      color: var(--tx); background: var(--fondo); -webkit-font-smoothing: antialiased;
+    }
+    main {
+      width: min(100%, 28rem); display: grid; gap: 1rem; justify-items: center; text-align: center;
+      background: var(--sup); border: 2.5px solid var(--linea); border-radius: 1.6rem;
+      box-shadow: 8px 8px 0 var(--linea); padding: clamp(1.3rem, 5vw, 2.2rem);
+    }
+    picture { display: block; line-height: 0; }
+    :root[data-theme='dark'] picture { background: #fff; border: 2px solid var(--linea); border-radius: .6rem; padding: .15rem .35rem; }
+    img { height: 6rem; width: auto; display: block; }
+    h1 { margin: 0; font-size: clamp(1.5rem, 6vw, 2rem); line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; }
+    p { margin: 0; color: var(--tx2); }
+    .pill {
+      display: inline-flex; align-items: center; gap: .4rem; background: var(--amarillo); color: var(--navy);
+      border: 2px solid var(--linea); border-radius: 99px; padding: .2rem .8rem; font-size: .8rem; font-weight: 800;
+    }
+    .actions { display: grid; gap: .6rem; width: 100%; margin-top: .4rem; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: .7rem 1.15rem;
+      font: inherit; font-weight: 800; text-decoration: none; color: #fff; background: var(--acento);
+      border: 2.5px solid var(--linea); border-radius: .85rem; box-shadow: 3px 3px 0 var(--linea); cursor: pointer;
+    }
+    .btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--linea); }
+    .btn--ghost { color: var(--tx); background: var(--sup); }
+    .btn:focus-visible { outline: 3px solid #2f80ed; outline-offset: 3px; }
+    .status { font-size: .85rem; min-height: 1.3em; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <picture>
+      <source srcset="/brand/logo-matefacil.webp" type="image/webp">
+      <img src="/brand/logo-matefacil-360.png" width="295" height="360" alt="Mate Fácil Academy">
+    </picture>
+    <span class="pill">Sin conexión</span>
+    <h1>No hay internet por ahora</h1>
+    <p>El aula necesita conexión para mostrar tus clases, notas y tareas. Revisa tu Wi‑Fi o tus datos móviles; cuando vuelva la señal te llevamos de regreso.</p>
+    <div class="actions">
+      <button type="button" class="btn" id="retry">Reintentar</button>
+      <a class="btn btn--ghost" href="/">Ir al inicio del aula</a>
+    </div>
+    <p class="status" role="status" aria-live="polite" id="status"></p>
+  </main>
+  <script>
+    (function () {
+      var status = document.getElementById('status');
+      var back = function () { location.reload(); };
+      document.getElementById('retry').addEventListener('click', function () {
+        if (navigator.onLine === false) { status.textContent = 'Sigues sin conexión. Inténtalo de nuevo en unos segundos.'; return; }
+        status.textContent = 'Reconectando…';
+        back();
+      });
+      // Al volver la señal se recarga sola: el service worker ya no encontrará fallo y se abrirá la página pedida.
+      window.addEventListener('online', function () { status.textContent = 'Conexión recuperada. Abriendo el aula…'; back(); });
+    })();
+  </script>
+</body>
+</html>

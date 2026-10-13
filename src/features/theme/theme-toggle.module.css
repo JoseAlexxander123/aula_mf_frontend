@@ -3,11 +3,11 @@
   border-radius: .75rem; border: var(--borde-fino); background: var(--sup); box-shadow: 2px 2px 0 var(--linea);
   font-size: 1.05rem; transition: transform .15s ease, box-shadow .15s ease;
 }
-.toggle:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--linea); }
+@media (hover: hover) { .toggle:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--linea); } }
 .toggle:active { transform: translate(1px, 1px); box-shadow: 0 0 0 var(--linea); }
 /* Giro corto al cambiar (solo transform: sin repintado). */
 .icon { display: block; animation: spin .4s ease-out; }
 @keyframes spin { from { transform: rotate(-90deg) scale(.6); } }
 
 /* Versión flotante para pantallas sin cabecera (ingreso, 404). */
-.floating { position: fixed; top: 1rem; right: 1rem; z-index: 20; }
+.floating { position: fixed; top: max(1rem, env(safe-area-inset-top, 0px)); right: max(1rem, env(safe-area-inset-right, 0px)); z-index: 20; }

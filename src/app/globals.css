@@ -52,6 +52,21 @@
 
   --topbar-h: 4.1rem;
   --gutter: clamp(16px, 3vw, 32px);
+
+  /* Zonas seguras (notch, esquinas redondeadas, barra de gestos). Valen 0 en pantallas sin recortes;
+     necesitan viewport-fit=cover (ver viewport en app/layout.tsx). Con la barra de estado de iOS en «default»
+     la parte superior ya queda fuera del contenido, por eso no se usa --sat. */
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+/* Alto de la barra de navegación inferior (móvil). Lo usan el relleno del contenido y los avisos para no quedar tapados. */
+:root { --bottom-nav-h: 4.4rem; }
+
+/* Teléfono apaisado: poca altura → cabecera y barra inferior más bajas para que el contenido respire. */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root { --topbar-h: 3.3rem; --bottom-nav-h: 3rem; }
 }
 
 /* Modo oscuro: se activa con data-theme="dark" en <html> (lo pone el script de tema antes del primer pintado). */
@@ -75,10 +90,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+/* El fondo también va en <html>: es lo que se ve al «rebotar» el scroll y detrás de las barras del sistema (sobre todo en oscuro). */
+html { -webkit-text-size-adjust: 100%; background: var(--fondo); -webkit-tap-highlight-color: transparent; }
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh; /* dvh = alto visible real en móvil (con la barra del navegador mostrada u oculta) */
   overflow-x: hidden;
   font-family: var(--sans);
   font-weight: 600;
@@ -96,6 +113,14 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 a { color: inherit; }
 button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
+/* Sin espera ni zoom por doble toque en controles; sin menú de «mantener pulsado» sobre enlaces y botones. */
+a, button, summary, label, input, select, textarea { touch-action: manipulation; }
+a, button { -webkit-touch-callout: none; }
+
+/* App instalada: sin «tirar para recargar» (recargaría la página en medio de una evaluación). */
+@media (display-mode: standalone) {
+  html { overscroll-behavior-y: none; }
+}
 button:disabled { cursor: not-allowed; }
 :focus-visible { outline: 3px solid var(--ruta-innovator); outline-offset: 3px; border-radius: 6px; }
 
@@ -122,7 +147,10 @@ h3 { font-size: 1.1rem; }
   font-weight: 800; text-decoration: none; background: var(--sup); color: var(--tx);
   transition: transform .15s ease, box-shadow .15s ease; white-space: nowrap;
 }
-.btn:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--linea); }
+/* El efecto «levantar» solo con ratón: en pantallas táctiles :hover se queda pegado tras tocar y deja el botón descuadrado. */
+@media (hover: hover) {
+  .btn:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--linea); }
+}
 .btn:active:not(:disabled) { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--linea); }
 .btn:disabled { opacity: .55; }
 .btn--primary { background: var(--acento); color: #fff; }
@@ -132,6 +160,10 @@ h3 { font-size: 1.1rem; }
 
 .link { font-weight: 800; font-size: .88rem; color: var(--acento); text-decoration: none; background: none; border: 0; padding: 0; }
 .link:hover { text-decoration: underline; }
+@media (pointer: coarse) {
+  .link { position: relative; }
+  .link::after { content: ''; position: absolute; inset: -.7rem -.55rem; }
+}
 
 .chip { border: var(--borde-fino); border-radius: 99px; padding: .2rem .65rem; font-weight: 800; font-size: .88rem; background: var(--sup); white-space: nowrap; }
 .pill { display: inline-flex; align-items: center; gap: .35rem; background: var(--amarillo); color: var(--navy); border: var(--borde-fino); border-radius: 99px; padding: .2rem .7rem; font-weight: 800; font-size: .78rem; }
@@ -143,6 +175,13 @@ h3 { font-size: 1.1rem; }
 }
 .input:focus { outline: none; border-color: var(--acento); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 25%, transparent); }
 .label { display: grid; gap: .35rem; font-weight: 800; font-size: .9rem; }
+
+/* Objetivos táctiles cómodos (≈44 px) en pantallas de dedo; con ratón se conserva el tamaño compacto. */
+@media (pointer: coarse) {
+  .btn { min-height: 2.75rem; }
+  .btn--sm { min-height: 2.5rem; }
+  .input { min-height: 2.75rem; }
+}
 
 .muted { color: var(--tx2); }
 .small { font-size: .85rem; }

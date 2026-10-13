@@ -14,6 +14,7 @@
 .notices li { background: var(--sup); border: var(--borde); border-radius: var(--radio); padding: .7rem .9rem; display: flex; gap: .7rem; align-items: center; min-width: 0; }
 .notices li > div { min-width: 0; overflow-wrap: anywhere; }
 .notices a { text-decoration: none; }
+@media (pointer: coarse) { .notices a { position: relative; } .notices a::after { content: ''; position: absolute; inset: -.7rem -.4rem; } }
 .notices small { display: block; color: var(--tx2); font-size: .8rem; }
 .noticeKind { font-size: .68rem; font-weight: 800; text-transform: uppercase; padding: .2rem .5rem; border-radius: 99px; background: var(--sup2); white-space: nowrap; }
 

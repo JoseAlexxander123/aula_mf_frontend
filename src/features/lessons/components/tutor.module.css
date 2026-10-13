@@ -1,4 +1,4 @@
-.tutor { background: var(--sup); border: var(--borde); border-radius: var(--radio); display: flex; flex-direction: column; min-height: 22rem; max-height: min(40rem, calc(100vh - 7rem)); overflow: hidden; }
+.tutor { background: var(--sup); border: var(--borde); border-radius: var(--radio); display: flex; flex-direction: column; min-height: 22rem; max-height: min(40rem, calc(100vh - 7rem)); max-height: min(40rem, calc(100dvh - 7rem)); overflow: hidden; }
 .head { display: flex; align-items: center; gap: .7rem; padding: .9rem 1rem; border-bottom: 1px solid color-mix(in srgb, var(--tx) 12%, transparent); }
 .head div { display: flex; flex-direction: column; line-height: 1.25; flex: 1; min-width: 0; }
 .head small { color: var(--tx2); font-size: .78rem; }
@@ -16,7 +16,7 @@
 
 .quick { display: flex; flex-wrap: wrap; gap: .4rem; padding: .8rem 1rem 0; }
 .quick button { border: 1.5px solid color-mix(in srgb, var(--tx) 20%, transparent); background: var(--sup); border-radius: 99px; padding: .4rem .8rem; font-size: .82rem; font-weight: 700; }
-.quick button:hover:not(:disabled) { border-color: var(--acento); }
+@media (hover: hover) { .quick button:hover:not(:disabled) { border-color: var(--acento); } }
 .quick button:disabled { opacity: .5; }
 .lockedBtn { opacity: .65; }
 
@@ -28,3 +28,7 @@
 .note { font-size: .74rem; color: var(--tx2); padding: 0 1rem .9rem; }
 
 .paused .quick, .paused .form { opacity: .45; }
+
+@media (pointer: coarse) {
+  .quick button, .form input, .form button { min-height: 2.6rem; }
+}

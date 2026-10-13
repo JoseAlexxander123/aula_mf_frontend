@@ -1,6 +1,7 @@
 .brand { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; flex: none; }
 .brand picture { display: block; line-height: 0; }
 .brand img { width: auto; }
+@media (pointer: coarse) { .brand { min-width: 2.75rem; justify-content: center; } }
 .header img { height: 3.1rem; }
 .hero img { height: 6.5rem; }
 /* En oscuro el logo va sobre una «pegatina» blanca para conservar sus colores (igual que la web). */
@@ -12,4 +13,8 @@
 @media (max-width: 560px) {
   .header img { height: 2.6rem; }
   .label { display: none; }
+}
+/* Apaisado: la cabecera es más baja (--topbar-h), el logo se ajusta para conservar el margen arriba y abajo. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .header img { height: 2.4rem; }
 }

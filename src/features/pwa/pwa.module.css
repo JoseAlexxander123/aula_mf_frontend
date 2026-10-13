@@ -1,0 +1,16 @@
+/* Aviso «sin conexión»: contenedor pegajoso sin altura propia; el aviso es una pastilla centrada. */
+.region {
+  position: sticky; top: calc(var(--topbar-h) + .5rem); z-index: 30;
+  display: grid; justify-items: center; pointer-events: none;
+}
+.banner {
+  pointer-events: auto; max-width: 100%; margin: 0 0 1rem; padding: .45rem 1rem; text-align: center;
+  font-size: .85rem; font-weight: 700; line-height: 1.35;
+  background: var(--aviso-fondo); color: var(--aviso); border: var(--borde-fino); border-radius: 1.1rem; box-shadow: var(--sombra-sm);
+}
+
+/* «Instalar la app» dentro del menú de perfil. */
+.install { display: grid; gap: .3rem; padding-top: .6rem; border-top: 1px solid var(--sup2); }
+.install > :global(.btn) { justify-self: start; }
+.title { font-weight: 800; font-size: .85rem; }
+.hint { font-size: .82rem; color: var(--tx2); }

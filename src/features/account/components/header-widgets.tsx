@@ -6,6 +6,7 @@ import { cn } from '@/lib/cn';
 import { relativeFromNow } from '@/lib/time';
 import type { AppNotification } from '@/types/domain';
 import { logoutAction } from '@/features/auth/actions';
+import { InstallButton } from '@/features/pwa/install-button';
 import { markNotificationsReadAction } from '../actions';
 import { useEarnedStars } from '../stars-store';
 import styles from './header.module.css';
@@ -33,7 +34,7 @@ export function StarsChip({ initial }: { initial: number }) {
   const earned = useEarnedStars();
   // `key` cambia al ganar estrellas → el elemento se recrea y la animación corta (solo transform) se repite.
   return (
-    <span key={earned} className={cn('chip', styles.stars, earned > 0 && styles.bump)} title="Estrellas" aria-live="polite">
+    <span key={earned} className={cn('chip', styles.headChip, styles.stars, earned > 0 && styles.bump)} title="Estrellas" aria-live="polite">
       ⭐ {initial + earned}
     </span>
   );
@@ -103,6 +104,7 @@ export function UserMenu({ name, avatar, subtitle, textAvatar }: { name: string;
       <div id={panelId} className={styles.panel} hidden={!open}>
         <p className={styles.panelTitle}>{name}</p>
         {subtitle && <p className={styles.empty}>{subtitle}</p>}
+        <InstallButton />
         <button type="button" className="btn btn--sm" onClick={logout} disabled={pending}>
           {pending ? 'Saliendo…' : 'Cerrar sesión'}
         </button>

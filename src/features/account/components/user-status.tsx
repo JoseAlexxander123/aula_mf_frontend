@@ -15,7 +15,7 @@ export async function StudentStatus() {
   const [profile, notifications] = await Promise.all([services.students.getProfile(ctx), services.notifications.list(ctx)]);
   return (
     <>
-      <span className={`chip ${styles.hideMobile}`} title="Días seguidos practicando">🔥 {profile.streakDays}</span>
+      <span className={`chip ${styles.headChip} ${styles.hideMobile}`} title="Días seguidos practicando">🔥 {profile.streakDays}</span>
       <StarsChip initial={profile.stars} />
       <NotificationsBell items={notifications} serverNow={ctx.requestedAt} />
       <UserMenu name={profile.firstName} avatar={profile.avatar} subtitle={profile.grade} />

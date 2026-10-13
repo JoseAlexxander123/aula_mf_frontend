@@ -1,10 +1,12 @@
-.stars { background: var(--amarillo); color: var(--navy); display: inline-block; }
+/* Chips de la cabecera (racha, estrellas): misma altura que los botones redondos para que todo quede alineado. */
+.headChip { display: inline-flex; align-items: center; min-height: 2.4rem; }
+.stars { background: var(--amarillo); color: var(--navy); }
 .bump { animation: bump .35s ease-out; }
 @keyframes bump { 40% { transform: scale(1.18); } }
 
 .menuRoot { position: relative; }
-.iconBtn { position: relative; font-size: 1.15rem; padding: .25rem .35rem; border: 0; background: none; }
-.badge { position: absolute; top: -4px; right: -6px; font-style: normal; background: var(--acento); color: #fff; font-size: .65rem; font-weight: 800; border-radius: 99px; padding: 0 .35rem; border: 2px solid var(--sup); }
+.iconBtn { position: relative; width: 2.4rem; height: 2.4rem; display: grid; place-items: center; font-size: 1.15rem; padding: 0; border: 0; border-radius: .75rem; background: none; }
+.badge { position: absolute; top: 0; right: -2px; font-style: normal; background: var(--acento); color: #fff; font-size: .65rem; font-weight: 800; border-radius: 99px; padding: 0 .35rem; border: 2px solid var(--sup); }
 .avatar {
   width: 2.4rem; height: 2.4rem; border-radius: 50%; display: grid; place-items: center; font-size: 1.3rem; padding: 0;
   background: color-mix(in srgb, var(--ruta-creator) 25%, var(--sup)); border: var(--borde-fino); font-weight: 800;
@@ -13,6 +15,7 @@
 
 .panel {
   position: absolute; right: 0; top: calc(100% + .6rem); z-index: 50; width: min(20rem, calc(100vw - 32px));
+  max-height: min(70vh, 28rem); max-height: min(70dvh, 28rem); overflow-y: auto; overscroll-behavior: contain;
   background: var(--sup); border: var(--borde); border-radius: 1rem; box-shadow: var(--sombra); padding: .9rem; display: grid; gap: .6rem;
 }
 .panelTitle { font-family: var(--display); font-weight: 800; }
@@ -26,4 +29,10 @@
 
 @media (max-width: 560px) {
   .hideMobile { display: none; }
+  /* En teléfono el panel se ancla a la pantalla (no al botón): con ancho completo y el mismo margen a izquierda y derecha.
+     Anclado al botón se salía por la izquierda en pantallas de 360 px o menos. */
+  .panel {
+    position: fixed; top: calc(var(--topbar-h) + .5rem); width: auto;
+    left: max(var(--gutter), var(--sal)); right: max(var(--gutter), var(--sar));
+  }
 }

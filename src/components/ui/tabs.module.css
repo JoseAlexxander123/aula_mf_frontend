@@ -22,7 +22,7 @@
 .list_cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
 .tab_cards { min-width: 0; border-radius: var(--radio); padding: .75rem 1rem; text-align: left; display: flex; flex-direction: column; transition: transform .15s ease; }
 .tab_cards[aria-selected='true'] { color: #fff; box-shadow: var(--sombra); }
-.tab_cards:hover { transform: translateY(-1px); }
+@media (hover: hover) { .tab_cards:hover { transform: translateY(-1px); } }
 
 /* pills: elegir hijo */
 .list_pills { display: flex; flex-wrap: wrap; gap: .5rem; }
@@ -35,6 +35,9 @@
 .tab_chips[aria-selected='true'] { background: var(--amarillo); color: var(--navy); box-shadow: 2px 2px 0 var(--linea); }
 .panel_chips, .panel_cards, .panel_pills { display: grid; gap: 1rem; }
 
+@media (pointer: coarse) {
+  .tab_folder, .tab_pills, .tab_chips, .tab_segmented { min-height: 2.6rem; }
+}
 @media (max-width: 560px) {
   .tab_folder { padding-inline: .7rem; font-size: .9rem; }
   .list_cards { grid-template-columns: 1fr; }

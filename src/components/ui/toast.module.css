@@ -1,4 +1,7 @@
-.region { position: fixed; z-index: 90; right: 16px; bottom: 16px; display: grid; gap: .5rem; width: min(22rem, calc(100vw - 32px)); pointer-events: none; }
+.region {
+  position: fixed; z-index: 90; right: max(16px, var(--sar)); bottom: max(16px, var(--sab));
+  display: grid; gap: .5rem; width: min(22rem, calc(100vw - 32px - var(--sal) - var(--sar))); pointer-events: none;
+}
 .toast {
   pointer-events: auto; display: flex; align-items: center; justify-content: space-between; gap: .8rem;
   background: var(--sup); border: var(--borde); border-radius: .9rem; box-shadow: var(--sombra); padding: .7rem .9rem;
@@ -11,4 +14,8 @@
 
 @keyframes enter { from { opacity: 0; transform: translateY(8px); } }
 
-@media (max-width: 860px) { .region { bottom: 5.5rem; } }
+/* Con la barra inferior visible, los avisos suben por encima de ella. */
+@media (max-width: 860px) { .region { bottom: calc(var(--bottom-nav-h) + var(--sab) + .75rem); } }
+/* Teléfono: el aviso ocupa todo el ancho con el mismo margen a ambos lados. */
+@media (max-width: 560px) { .region { left: max(16px, var(--sal)); width: auto; } }
+@media (pointer: coarse) { .toast button { min-width: 2.2rem; min-height: 2.2rem; } }

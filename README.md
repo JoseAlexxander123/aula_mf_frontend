@@ -68,6 +68,38 @@ Botón 🌙/☀️ en la cabecera (y flotante en el ingreso). Misma convención 
   redefine esos tokens en `:root[data-theme='dark']`. Para colores nuevos, usar siempre tokens, nunca `#fff`.
 - El logo va sobre una «pegatina» blanca en oscuro; el informe impreso/PDF siempre sale en claro.
 
+## App instalable (PWA)
+
+El aula se puede instalar en celular, tablet y computador (Chrome/Edge/Android: «Instalar app»; iPhone/iPad: Safari →
+Compartir → «Añadir a pantalla de inicio»). Abre a pantalla completa, con el icono de Mate Fácil.
+
+| Pieza | Archivo |
+|---|---|
+| Manifiesto (nombre, iconos, accesos directos a Inicio / Evaluaciones / Clases) | `src/app/manifest.ts` |
+| Service worker | `public/sw.js` (cabeceras sin caché en `next.config.ts`) |
+| Pantalla «Sin conexión» autosuficiente | `public/offline.html` |
+| Iconos 192 / 512 / maskable | `public/icons/` (apple-touch: `src/app/apple-icon.png`) |
+| Registro, botón «Instalar la app» (menú de perfil) y aviso sin conexión | `src/features/pwa/` |
+| Pruebas (iconos reales, rutas de accesos directos, precaché) | `src/app/manifest.test.ts` |
+
+**Qué guarda el service worker — y qué no (decisión de seguridad):** solo archivos estáticos con hash
+(`/_next/static`) y la marca. **Nunca** guarda HTML, datos de la sesión, Server Actions ni respuestas de la API:
+en un celular compartido jamás aparecerán notas o datos de otro alumno. Con la red caída, las páginas muestran
+`offline.html`; las lecciones, notas y entregas **sí necesitan conexión** (la PWA no los vuelve disponibles sin red).
+
+**Pantallas con notch / barra de gestos:** el viewport usa `viewport-fit=cover` y los tokens `--sal`, `--sar`,
+`--sab` (`globals.css`) mantienen la barra inferior, los avisos y los márgenes laterales dentro de la zona segura.
+Usar `dvh` (no `vh`) para alturas a pantalla completa, y `@media (hover: hover)` para efectos de hover.
+
+**Requisitos y pruebas**
+
+- Producción **solo con HTTPS** (Nginx/Caddy con certificado); `localhost` cuenta como seguro. Sin HTTPS no se registra el SW.
+- Probar siempre con build: `pnpm build && pnpm start` → DevTools → *Application* (Manifest, Service Workers) o Lighthouse.
+  En `pnpm dev` el SW no se registra (y retira uno viejo del mismo puerto).
+- Si cambia `PRECACHE` en `sw.js`, subir `VERSION` para renovar las cachés. El navegador revisa `sw.js` en cada visita.
+- Los iconos se generaron desde `public/brand/logo-matefacil-360.png` sobre fondo blanco (el maskable deja ~19 % de margen).
+  Si cambia el logo, rehacer los tres PNG con los mismos tamaños: la prueba comprueba que existan y midan lo declarado.
+
 ## Arquitectura
 
 ```

@@ -27,7 +27,21 @@ const nextConfig: NextConfig = {
   compress: process.env.NEXT_COMPRESS !== 'false',
 
   async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }];
+    return [
+      { source: '/:path*', headers: securityHeaders },
+      // PWA: el service worker nunca debe quedar en caché (si no, una versión vieja podría seguir mandando).
+      {
+        source: '/sw.js',
+        headers: [
+          { key: 'Content-Type', value: 'application/javascript; charset=utf-8' },
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
+          { key: 'Service-Worker-Allowed', value: '/' },
+          { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self'" },
+        ],
+      },
+      // La pantalla «sin conexión» se revalida siempre: el service worker guarda su propia copia.
+      { source: '/offline.html', headers: [{ key: 'Cache-Control', value: 'no-cache' }] },
+    ];
   },
 };
 

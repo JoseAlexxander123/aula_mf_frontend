@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Logo } from '@/components/brand/logo';
 import { STUDENT_NAV } from '@/config/navigation';
 import { cn } from '@/lib/cn';
+import { OfflineBanner } from '@/features/pwa/offline-banner';
 import { ThemeToggle } from '@/features/theme/theme-toggle';
 import styles from './app-shell.module.css';
 import { SideNav } from './side-nav';
@@ -31,6 +32,7 @@ export function AppShell({ area, status, children }: Props) {
       <div className={styles.frame}>
         {area === 'student' && <SideNav items={STUDENT_NAV} />}
         <main id="contenido" className={styles.content}>
+          <OfflineBanner />
           {children}
         </main>
       </div>

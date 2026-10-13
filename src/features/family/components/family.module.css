@@ -17,6 +17,7 @@
 .msgTeacher { background: var(--sup2); border-bottom-left-radius: .3rem; align-self: flex-start; }
 .msgFamily { background: var(--acento); color: #fff; border-bottom-right-radius: .3rem; align-self: flex-end; }
 .msgPending { opacity: .6; }
+@media (pointer: coarse) { .compose input, .compose button { min-height: 2.6rem; } }
 .compose { display: flex; gap: .4rem; }
 .compose input { flex: 1; min-width: 0; border: 1.5px solid color-mix(in srgb, var(--tx) 20%, transparent); border-radius: 99px; padding: .5rem .8rem; background: var(--sup); }
 .compose input:focus { outline: none; border-color: var(--acento); }

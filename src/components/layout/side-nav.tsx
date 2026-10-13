@@ -13,7 +13,8 @@ export function SideNav({ items }: { items: NavItem[] }) {
       {items.map((item) => {
         const current = pathname === item.href || pathname.startsWith(`${item.href}/`);
         return (
-          <Link key={item.href} href={item.href} aria-current={current ? 'page' : undefined} className={styles.navLink}>
+          // aria-label: en móvil la etiqueta larga se oculta (display:none) y la corta es aria-hidden; sin esto el enlace no tendría nombre.
+          <Link key={item.href} href={item.href} aria-label={item.label} aria-current={current ? 'page' : undefined} className={styles.navLink}>
             <span className={styles.navIcon}><NavIcon name={item.icon} /></span>
             <span className={styles.navLabel}>{item.label}</span>
             <span className={styles.navShort} aria-hidden="true">{item.short ?? item.label}</span>
