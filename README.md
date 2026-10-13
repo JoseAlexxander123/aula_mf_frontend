@@ -190,6 +190,20 @@ Principios:
 Los limitadores están en memoria (`lib/rate-limit.ts`): sirven para **una** instancia. Con varias, cambiar el
 almacenamiento a Redis manteniendo la interfaz `RateLimiter`.
 
+## Integración continua (GitHub Actions)
+
+`.github/workflows/ci.yml` corre en cada pull request y en cada push a `main`:
+
+| Job | Qué hace |
+|---|---|
+| **Lint · Tipos · Tests · Build** | `pnpm lint` → `pnpm typecheck` → `pnpm test` → `pnpm build` (modo mock, sin secretos) y comprueba que el standalone incluya `sw.js`, `offline.html` e iconos de la PWA |
+| **Imagen Docker** | Construye la imagen (sin publicarla), la arranca y comprueba `/ingreso`, el manifiesto, `/sw.js` y `/offline.html` |
+
+Para correr lo mismo en local antes de subir: `pnpm lint && pnpm typecheck && pnpm test && pnpm build`.
+
+**Para que un PR no se pueda unir si falla:** GitHub → *Settings → Branches* → regla para `main` → *Require status checks to pass*
+→ marcar los dos jobs de arriba. (Es un ajuste del repositorio; no se puede dejar en el código.)
+
 ## Despliegue en VPS
 
 ```bash

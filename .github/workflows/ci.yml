@@ -1,0 +1,107 @@
+name: CI
+
+# Que nada llegue a main sin pasar: lint, tipos, tests y build de producción (y que la imagen Docker arranque).
+# Para BLOQUEAR el merge si falla: GitHub → Settings → Branches → regla para `main` →
+# «Require status checks to pass» → marcar «Lint · Tipos · Tests · Build» y «Imagen Docker».
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Un push nuevo a la misma rama cancela la ejecución anterior del PR; en main nunca se cancela.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Lint · Tipos · Tests · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      # Modo demo: no necesita backend .NET ni secretos.
+      API_MODE: mock
+    steps:
+      - uses: actions/checkout@v7
+
+      # La versión de pnpm sale de `packageManager` en package.json (no se repite aquí).
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Tipos (next typegen + tsc)
+        run: pnpm typecheck
+
+      - name: Tests
+        run: pnpm test
+
+      # Caché de compilación de Next (la recomienda su documentación): builds siguientes mucho más rápidos.
+      - name: Caché de Next.js
+        uses: actions/cache@v6
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('src/**', 'public/**', 'next.config.ts', 'tsconfig.json') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+
+      - name: Build de producción
+        run: pnpm build
+
+      # El build debe dejar todo lo que la PWA necesita dentro del servidor standalone.
+      - name: Comprobar artefactos de la PWA
+        run: |
+          for f in server.js public/sw.js public/offline.html public/icons/icon-512.png .next/static; do
+            test -e ".next/standalone/$f" || { echo "::error::Falta .next/standalone/$f"; exit 1; }
+          done
+
+  docker:
+    name: Imagen Docker
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: docker/setup-buildx-action@v4
+
+      - name: Construir la imagen (sin publicarla)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          push: false
+          tags: aula-mf:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Prueba de humo: el contenedor arranca y sirve el ingreso, el manifiesto y el service worker.
+      - name: Arrancar el contenedor y probarlo
+        run: |
+          docker run -d --name aula -p 3000:3000 -e API_MODE=mock aula-mf:ci
+          for i in $(seq 1 30); do
+            curl -fsS -o /dev/null http://127.0.0.1:3000/ingreso && break
+            sleep 2
+          done
+          curl -fsS -o /dev/null http://127.0.0.1:3000/ingreso
+          curl -fsS http://127.0.0.1:3000/manifest.webmanifest | grep -q '"display":"standalone"'
+          curl -fsS -o /dev/null http://127.0.0.1:3000/sw.js
+          curl -fsS -o /dev/null http://127.0.0.1:3000/offline.html
+
+      - name: Registros del contenedor (si algo falló)
+        if: failure()
+        run: docker logs aula
