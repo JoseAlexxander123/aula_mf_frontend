@@ -136,7 +136,8 @@ Principios:
 
 ## Conectar con la API .NET
 
-1. `API_MODE=http` y `API_BASE_URL=https://api…/api` en `.env.local`.
+1. `API_MODE=http` y `API_BASE_URL=https://api…/api/v1` en `.env.local` (el backend versiona en la URL;
+   en local con Docker: `http://localhost:5087/api/v1`).
 2. La API debe implementar los endpoints de `src/services/http/index.ts` y devolver los tipos de
    `src/types/domain.ts` (JSON camelCase, fechas ISO 8601 UTC). Resumen:
 
@@ -144,7 +145,8 @@ Principios:
 |--------|------|----------|
 | POST | `/auth/student/login` · `/auth/family/login` | `{ token, user, expiresIn }` (401 si falla) |
 | GET  | `/auth/me` | `SessionUser` |
-| GET  | `/students/me` · `/dashboard` · `/learning-path` · `/achievements` | perfil y vistas |
+| POST | `/auth/logout` | — |
+| GET  | `/students/me` · `/students/me/dashboard` · `/students/me/learning-path` · `/students/me/achievements` | perfil y vistas |
 | GET  | `/students/me/lessons/current?track=math\|lab` | `{ lesson, unit }` |
 | POST | `/practice/exercises/{id}/check` | `AnswerCheck` |
 | POST | `/tutor/ask` | `TutorReply` |
@@ -153,7 +155,7 @@ Principios:
 | POST | `/evaluations/attempts/{id}/submit` | `QuizResult` (marca `late` si llega tarde) |
 | GET  | `/students/me/schedule` | `Schedule` |
 | POST | `/tasks/{id}/submissions` | `Task` |
-| GET/POST | `/families/me/children` · `/messages` · `/membership` | vistas de familia |
+| GET/POST | `/families/me/children` · `/families/me/messages` · `/families/me/membership` | vistas de familia |
 | GET/POST | `/notifications` · `/notifications/read-all` | avisos |
 
 3. Errores: usar códigos HTTP estándar (401, 403, 404, 422, 429 con `Retry-After`); el frontend los traduce a
